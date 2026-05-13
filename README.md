@@ -1,26 +1,27 @@
 # 🤖 Job Hunter Bot — Telegram
 
-> Gửi CV → AI phân tích → Tự động tìm job từ 10 nguồn VN → Xuất Excel
+> Upload your CV → AI analyzes it → Automatically searches jobs from 10 Vietnamese platforms → Export results to Excel
 
 ---
 
-## ✨ Tính năng
+## ✨ Features
 
-| Tính năng | Chi tiết |
-|---|---|
-| 📄 Nhận CV | PDF upload hoặc paste text |
-| 🤖 AI Phân tích | DeepSeek AI extract skills, keywords, level |
-| 🔍 10 Nguồn | ITviec, TopDev, VietnamWorks, CareerViet, 123Job, JobsGO, Glints, LinkedIn, TopCV, TimViecNhanh |
-| 📊 Xuất Excel | 3 sheet: Jobs, CV Profile, Stats — có filter/sort |
-| ⚡ Concurrent | Chạy song song nhiều nguồn |
+| Feature                  | Details                                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------- |
+| 📄 CV Upload             | Upload PDF files or paste CV text                                                               |
+| 🤖 AI Analysis           | DeepSeek AI extracts skills, keywords, and experience level                                     |
+| 🔍 10 Job Sources        | ITviec, TopDev, VietnamWorks, CareerViet, 123Job, JobsGO, Glints, LinkedIn, TopCV, TimViecNhanh |
+| 📊 Excel Export          | 3 sheets: Jobs, CV Profile, Stats — with filter/sort support                                    |
+| ⚡ Concurrent Processing | Run multiple scrapers in parallel                                                               |
 
 ---
 
-## 🚀 Cài đặt
+## 🚀 Installation
 
-### 1. Yêu cầu
+### 1. Requirements
+
 - Node.js >= 18
-- Telegram Bot Token (tạo qua [@BotFather](https://t.me/BotFather))
+- Telegram Bot Token (create via [@BotFather](https://t.me/BotFather))
 - DeepSeek API Key ([platform.deepseek.com](https://platform.deepseek.com))
 
 ### 2. Clone & Install
@@ -31,19 +32,20 @@ cd job-hunter-bot
 npm install
 ```
 
-### 3. Cấu hình .env
+### 3. Configure `.env`
 
 ```bash
 cp .env.example .env
 ```
 
-Mở `.env` và điền:
-```
-TELEGRAM_BOT_TOKEN=123456789:ABCdef...    # từ BotFather
-DEEPSEEK_API_KEY=sk-...                   # từ DeepSeek platform
+Open `.env` and fill in:
+
+```env
+TELEGRAM_BOT_TOKEN=123456789:ABCdef...
+DEEPSEEK_API_KEY=sk-...
 ```
 
-### 4. Chạy bot
+### 4. Run the Bot
 
 ```bash
 # Production
@@ -55,39 +57,39 @@ npm run dev
 
 ---
 
-## 📱 Cách dùng
+## 📱 Usage
 
+```text
+1. Open Telegram and find your bot
+2. Type /start
+3. Upload your CV PDF or paste CV text
+4. Wait around 1–2 minutes
+5. Receive the Excel result file
 ```
-1. Mở Telegram, tìm bot của bạn
-2. /start để bắt đầu
-3. Gửi file PDF CV hoặc paste text CV
-4. Chờ ~1-2 phút
-5. Nhận file Excel kết quả!
-```
 
-### Các lệnh
+### Commands
 
-| Lệnh | Tác dụng |
-|---|---|
-| `/start` | Giới thiệu bot |
-| `/help` | Hướng dẫn sử dụng |
-| `/status` | Kiểm tra trạng thái |
-| `/search <keyword>` | Tìm nhanh theo từ khóa |
+| Command             | Description                |
+| ------------------- | -------------------------- |
+| `/start`            | Start the bot              |
+| `/help`             | Show usage instructions    |
+| `/status`           | Check bot status           |
+| `/search <keyword>` | Quick keyword-based search |
 
 ---
 
-## 📁 Cấu trúc project
+## 📁 Project Structure
 
-```
+```text
 job-hunter-bot/
 ├── src/
-│   ├── index.js          # Telegram bot, xử lý message
-│   ├── cvAnalyzer.js     # DeepSeek AI phân tích CV
-│   ├── researcher.js     # Orchestrate scrapers
-│   ├── scrapers.js       # 10 scrapers (ITviec, TopDev, ...)
-│   ├── excelExporter.js  # Xuất file Excel đẹp
+│   ├── index.js          # Telegram bot & message handling
+│   ├── cvAnalyzer.js     # DeepSeek AI CV analysis
+│   ├── researcher.js     # Scraper orchestrator
+│   ├── scrapers.js       # 10 job scrapers
+│   ├── excelExporter.js  # Excel export generator
 │   └── logger.js         # Winston logger
-├── output/               # File Excel tạm (tự xóa sau khi gửi)
+├── output/               # Temporary Excel files
 ├── .env.example
 ├── package.json
 └── README.md
@@ -95,13 +97,13 @@ job-hunter-bot/
 
 ---
 
-## ⚙️ Cấu hình nâng cao (.env)
+## ⚙️ Advanced Configuration (.env)
 
 ```env
-# Số jobs tối đa mỗi nguồn (default: 20)
+# Maximum jobs per source (default: 20)
 MAX_JOBS_PER_SOURCE=20
 
-# Số scrapers chạy đồng thời (default: 3)
+# Number of concurrent scrapers (default: 3)
 CONCURRENCY=3
 
 # DeepSeek model
@@ -113,59 +115,70 @@ LOG_LEVEL=info
 
 ---
 
-## 🐳 Docker (optional)
+## 🐳 Docker (Optional)
 
 ```dockerfile
 FROM node:18-alpine
+
 WORKDIR /app
+
 COPY package*.json ./
+
 RUN npm ci --only=production
+
 COPY . .
+
 CMD ["node", "src/index.js"]
 ```
 
 ```bash
 docker build -t job-hunter-bot .
-docker run -d --env-file .env --name job-bot job-hunter-bot
+
+docker run -d \
+  --env-file .env \
+  --name job-bot \
+  job-hunter-bot
 ```
 
 ---
 
 ## 📊 Excel Output
 
-File Excel gồm **3 sheet**:
+The generated Excel file contains **3 sheets**:
 
-- **Jobs Found**: Tất cả jobs với filter/sort — Tên Job, Công Ty, Range Lương, Địa Điểm, Nguồn, Link
-- **CV Profile**: Kết quả phân tích CV từ DeepSeek AI  
-- **📊 Stats**: Thống kê số job theo từng nguồn
+- **Jobs Found**: All matching jobs with filter/sort support — Job Title, Company, Salary Range, Location, Source, Link
+- **CV Profile**: AI-analyzed candidate profile from DeepSeek
+- **📊 Stats**: Job statistics grouped by source
 
 ---
 
-## 🔧 Thêm nguồn mới
+## 🔧 Add a New Job Source
 
-Mở `src/scrapers.js`, thêm function:
+Open `src/scrapers.js` and add a new scraper function:
 
 ```js
 async function scrapeMyNewSite(keywords) {
   const jobs = [];
-  // ... scraping logic
+
+  // scraping logic
+
   return jobs; // [{ title, company, salary, location, link, source }]
 }
 ```
 
-Rồi add vào array `scrapers` ở cuối file.
+Then add it to the `scrapers` array at the bottom of the file.
 
 ---
 
-## ⚠️ Lưu ý
+## ⚠️ Notes
 
-- LinkedIn có thể block scraping — dùng VPN hoặc proxy nếu cần
-- Một số site thay đổi HTML structure — cần update selector
-- DeepSeek API: ~$0.0001/CV analysis (rất rẻ)
-- Bot chỉ xử lý 1 request per user cùng lúc
+- LinkedIn may block scraping requests — consider using proxies or VPNs if needed
+- Some websites may change their HTML structure over time — selectors may require updates
+- DeepSeek API cost is extremely low (~$0.0001 per CV analysis)
+- The bot processes only one request per user at a time
 
 ---
 
 ## 📄 License
 
-MIT — free to use, modify, distribute.
+MIT — free to use, modify, and distribute.
